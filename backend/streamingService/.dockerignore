@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+.env
+*.log
+coverage
+logs
+videos
+controllers/*.mp4
