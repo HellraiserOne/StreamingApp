@@ -1,6 +1,7 @@
+
 # StreamingApp
 AWS Orchestration and Scaling with Orchestration and Scaling (Jenkins → ECR → EKS → CloudWatch, mandatory) StreamingApp on Kubernetes (Docker Hub → Helm → Ingress → scale/update, the detailed spec)
-=======
+
 
 Stream premium video content, host live watch parties, and manage your catalogue with a modern microservice architecture. The platform now ships with a production-ready admin portal, real-time chat, S3-backed adaptive streaming, and a redesigned cinematic frontend experience.
 
@@ -138,4 +139,5 @@ Automated tests are not yet included. Recommended smoke checks:
 ## License
 
 MIT © StreamFlix Team
+
 
