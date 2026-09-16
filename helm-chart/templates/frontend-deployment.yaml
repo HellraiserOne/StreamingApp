@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: {{ .Values.services.frontend.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.services.frontend.image }}:{{ .Values.services.frontend.tag }}"
+          ports:
+            - containerPort: {{ .Values.services.frontend.port }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.services.frontend.port }}
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.services.frontend.port }}
+            initialDelaySeconds: 15

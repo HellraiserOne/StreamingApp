@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-deployment
+spec:
+  replicas: {{ .Values.services.admin.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+        - name: admin
+          image: "{{ .Values.services.admin.image }}:{{ .Values.services.admin.tag }}"
+          ports:
+            - containerPort: {{ .Values.services.admin.port }}
+          envFrom:
+            - configMapRef:
+                name: streamingapp-config
+            - secretRef:
+                name: streamingapp-secret
+          env:
+            - name: PORT
+              value: "{{ .Values.services.admin.port }}"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.services.admin.port }}
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.services.admin.port }}
+            initialDelaySeconds: 15

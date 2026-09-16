@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streaming-deployment
+spec:
+  replicas: {{ .Values.services.streaming.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: streaming
+  template:
+    metadata:
+      labels:
+        app: streaming
+    spec:
+      containers:
+        - name: streaming
+          image: "{{ .Values.services.streaming.image }}:{{ .Values.services.streaming.tag }}"
+          ports:
+            - containerPort: {{ .Values.services.streaming.port }}
+          envFrom:
+            - configMapRef:
+                name: streamingapp-config
+            - secretRef:
+                name: streamingapp-secret
+          env:
+            - name: PORT
+              value: "{{ .Values.services.streaming.port }}"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.services.streaming.port }}
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.services.streaming.port }}
+            initialDelaySeconds: 15

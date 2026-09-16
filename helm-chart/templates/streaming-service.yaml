@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: streaming-svc
+spec:
+  selector:
+    app: streaming
+  ports:
+    - port: {{ .Values.services.streaming.port }}
+      targetPort: {{ .Values.services.streaming.port }}

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-deployment
+spec:
+  replicas: {{ .Values.services.chat.replicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: chat
+  template:
+    metadata:
+      labels:
+        app: chat
+    spec:
+      containers:
+        - name: chat
+          image: "{{ .Values.services.chat.image }}:{{ .Values.services.chat.tag }}"
+          ports:
+            - containerPort: {{ .Values.services.chat.port }}
+          envFrom:
+            - configMapRef:
+                name: streamingapp-config
+            - secretRef:
+                name: streamingapp-secret
+          env:
+            - name: PORT
+              value: "{{ .Values.services.chat.port }}"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.services.chat.port }}
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.services.chat.port }}
+            initialDelaySeconds: 15

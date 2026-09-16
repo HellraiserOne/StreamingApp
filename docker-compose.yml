@@ -21,7 +21,7 @@ services:
       CLIENT_URLS: ${CLIENT_URLS:-http://localhost:3000}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
-      AWS_REGION: ${AWS_REGION:-ap-south-1}
+      AWS_REGION: ${AWS_REGION:-us-east-1}
       AWS_S3_BUCKET: ${AWS_S3_BUCKET:-}
     ports:
       - "${AUTH_PORT:-3001}:3001"
