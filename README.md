@@ -1,6 +1,6 @@
-# StreamingApp — Container Orchestration & Scaling on AWS EKS
+# StreamingApp - Container Orchestration & Scaling on AWS EKS
 
-A 5-service MERN streaming platform (auth, streaming, admin, chat, frontend) containerized with Docker, packaged as a Helm chart, and deployed to a production-style Kubernetes cluster on Amazon EKS — with Ingress routing, MongoDB Atlas, S3-backed media storage, CloudWatch monitoring/logging, and a Jenkins CI pipeline.
+A 5-service MERN streaming platform (auth, streaming, admin, chat, frontend) containerized with Docker, packaged as a Helm chart, and deployed to a production-style Kubernetes cluster on Amazon EKS - with Ingress routing, MongoDB Atlas, S3-backed media storage, CloudWatch monitoring/logging, and a Jenkins CI pipeline.
 
 ## Architecture
 
