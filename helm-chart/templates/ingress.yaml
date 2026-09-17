@@ -17,6 +17,72 @@ spec:
                 name: frontend-svc
                 port:
                   number: 80
+---
+# streaming/admin/chat all mount their Express routers at the exact same
+# prefix as their Ingress path (e.g. app.use('/api/streaming', streamingRoutes)),
+# so the incoming path already matches what the backend expects — no rewrite,
+# forward it through unchanged.
+# Also routes /socket.io to chat-svc: Socket.IO defaults to that path and
+# CHAT_SOCKET_URL is set to the current origin, so the WebSocket handshake
+# needs somewhere to land too.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streamingapp-api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-body-size: "500m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /api/streaming
+            pathType: Prefix
+            backend:
+              service:
+                name: streaming-svc
+                port:
+                  number: {{ .Values.services.streaming.port }}
+          - path: /api/admin
+            pathType: Prefix
+            backend:
+              service:
+                name: admin-svc
+                port:
+                  number: {{ .Values.services.admin.port }}
+          - path: /api/chat
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-svc
+                port:
+                  number: {{ .Values.services.chat.port }}
+          - path: /socket.io
+            pathType: Prefix
+            backend:
+              service:
+                name: chat-svc
+                port:
+                  number: {{ .Values.services.chat.port }}
+---
+# auth-svc mounts its router at /api (app.use('/api', userRoute)) rather than
+# /api/auth, so /api/auth/login needs to become /api/login — strip only the
+# "auth" segment, keep /api.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streamingapp-auth-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api/$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
           - path: /api/auth(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
@@ -24,24 +90,3 @@ spec:
                 name: auth-svc
                 port:
                   number: {{ .Values.services.auth.port }}
-          - path: /api/streaming(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: streaming-svc
-                port:
-                  number: {{ .Values.services.streaming.port }}
-          - path: /api/admin(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: admin-svc
-                port:
-                  number: {{ .Values.services.admin.port }}
-          - path: /api/chat(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: chat-svc
-                port:
-                  number: {{ .Values.services.chat.port }}

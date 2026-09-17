@@ -31,12 +31,12 @@ spec:
             - name: PORT
               value: "{{ .Values.services.streaming.port }}"
           readinessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: {{ .Values.services.streaming.port }}
             initialDelaySeconds: 5
+            periodSeconds: 10
           livenessProbe:
-            httpGet:
-              path: /health
+            tcpSocket:
               port: {{ .Values.services.streaming.port }}
             initialDelaySeconds: 15
+            periodSeconds: 10

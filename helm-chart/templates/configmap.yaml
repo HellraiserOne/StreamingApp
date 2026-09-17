@@ -5,4 +5,5 @@ metadata:
 data:
   CLIENT_URLS: {{ .Values.config.clientUrls | quote }}
   AWS_REGION: {{ .Values.config.awsRegion | quote }}
-  MONGO_URI: "mongodb://{{ .Values.config.mongoUriHost }}/streamingapp"
+  AWS_S3_BUCKET: {{ .Values.config.awsS3Bucket | quote }}
+  # MONGO_URI now lives in the Secret (it embeds Atlas credentials) — see secret.yaml

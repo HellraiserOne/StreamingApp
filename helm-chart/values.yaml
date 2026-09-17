@@ -34,7 +34,7 @@ ingress:
 config:
   clientUrls: "http://streamingapp.local"
   awsRegion: "us-east-1"
-  mongoUriHost: "mongo:27017"
+  awsS3Bucket: "datson-s3"
 
 # Do NOT commit real values here — pass these at install time with --set
 # e.g. helm install streamingapp ./streamingapp --set secrets.jwtSecret=... etc.

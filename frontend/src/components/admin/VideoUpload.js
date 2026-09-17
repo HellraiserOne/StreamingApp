@@ -13,8 +13,8 @@ import { CloudUpload } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 
-const STREAMING_API = 'http://localhost:3002/api';
-
+import { STREAMING_API_URL } from '../../config/env';
+const STREAMING_API = process.env.REACT_APP_STREAMING_API_URL || 'http://localhost:3002/api';
 const Input = styled('input')({
   display: 'none',
 });
